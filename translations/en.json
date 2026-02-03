@@ -15,6 +15,7 @@
     "markAsPaidButton": "Mark as Paid",
     "footer": "This widget enables Bitcoin Lightning Network tips. After paying via QR code, click Mark as Paid to record the tip on this ticket.",
     "satsLabel": "sats",
+    "addressLabel": "Agent Lightning Address",
     "publicCommentLabel": "Make tip comment public (visible to end users)",
     "publicCommentHint": "You do not have permission to post public comments"
   },
