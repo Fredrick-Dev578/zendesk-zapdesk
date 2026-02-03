@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import i18n from "./lib/i18n";
 import logger from "./utils/logger";
 
 const LightningInvoiceQR = ({ address, amountSats, message = "", size = 220 }) => {
@@ -58,9 +59,22 @@ const LightningInvoiceQR = ({ address, amountSats, message = "", size = 220 }) =
   if (error) return <div className="zd-error">⚠️ {error}</div>;
   if (!invoice) return <p>Loading invoice...</p>;
 
+  const copyToClipboard = () => {
+    const text = invoice.replace("lightning:", "");
+    navigator.clipboard.writeText(text);
+    logger.log("[LNURL] Copied invoice to clipboard");
+  };
+
   return (
-    <div style={{ textAlign: "center" }}>
-      <QRCodeSVG value={invoice} size={size} />
+    <div className="zd-qr-container">
+      <div className="zd-qr-svg">
+        <QRCodeSVG value={invoice} size={size} />
+      </div>
+      <div className="zd-qr-actions">
+        <button className="zd-btn zd-btn--secondary zd-btn--small" onClick={copyToClipboard}>
+          {i18n.t("ui.copyInvoiceButton", { defaultValue: "Copy Invoice" })}
+        </button>
+      </div>
     </div>
   );
 };
