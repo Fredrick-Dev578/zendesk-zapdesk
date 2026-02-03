@@ -61,11 +61,21 @@ export default function App({ client }) {
         setLightningAddress(data.lightningAddress);
 
         // Get current user role to determine permissions for posting public comments
-        // IMPORTANT: Role detection may return role names for some users (e.g., 'admin', 'agent')
-        // or role IDs for others depending on permissions and Zendesk configuration
+        // Performance optimization: check session cache first (Issue #24)
         try {
-          const userData = await client.get(['currentUser.role']);
-          const role = userData['currentUser.role'];
+          let role;
+          const cachedRoleData = sessionStorage.getItem("zapdesk_user_role");
+
+          if (cachedRoleData) {
+            const parsed = JSON.parse(cachedRoleData);
+            role = parsed["currentUser.role"];
+            logger.log("[Zapdesk] Using cached user role:", role);
+          } else {
+            const userData = await client.get(["currentUser.role"]);
+            role = userData["currentUser.role"];
+            sessionStorage.setItem("zapdesk_user_role", JSON.stringify(userData));
+            logger.log("[Zapdesk] User role detected and cached:", role);
+          }
 
           logger.log('[Zapdesk] User role detected:', role);
 
